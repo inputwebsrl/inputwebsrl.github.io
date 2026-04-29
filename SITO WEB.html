@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INPUT | High-End Web Development</title>
+    <style>
+        :root {
+            --primary-red: #FF0000;
+            --dark-bg: #050505;
+            --tech-gray: #111;
+            --accent-glow: rgba(255, 0, 0, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-snap-type: y mandatory;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 70px;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            border-bottom: 1px solid #222;
+            backdrop-filter: blur(10px);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
+
+        nav a:hover { color: var(--primary-red); }
+
+        /* --- SECTIONS LAYOUT --- */
+        section {
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            scroll-snap-align: start;
+            position: relative;
+            padding: 80px 5%;
+        }
+
+        /* 1. HOME */
+        .hero-frame {
+            border: 1px solid #222;
+            padding: 60px;
+            background: #000;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(0,0,0,1);
+        }
+        .hero-logo { 
+            width: 100%; 
+            max-width: 700px; 
+            height: auto;
+        }
+
+        /* 2. CHI SIAMO (VIDEO) */
+        .video-box { 
+            width: 100%; 
+            max-width: 1000px; 
+            border: 1px solid #333;
+            background: #000;
+        }
+        video { width: 100%; display: block; }
+
+        /* 3. BROCHURE */
+        .brochure-view {
+            display: flex;
+            width: 100%;
+            height: 80%;
+            gap: 20px;
+            justify-content: center;
+        }
+        .brochure-view img {
+            width: 45%;
+            height: auto;
+            max-height: 100%;
+            object-fit: contain;
+            border: 1px solid #222;
+        }
+
+        /* 4. I NOSTRI SERVIZI */
+        #servizi {
+            background: radial-gradient(circle at center, #111 0%, #050505 100%);
+        }
+
+        .giant-title {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 60px;
+            text-align: center;
+            letter-spacing: -2px;
+            z-index: 2;
+        }
+        .giant-title span {
+            color: var(--primary-red);
+            text-shadow: 0 0 15px var(--primary-red);
+        }
+
+        .services-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            width: 100%;
+            max-width: 1200px;
+            z-index: 2;
+        }
+
+        .s-card {
+            background: rgba(20, 20, 20, 0.6);
+            padding: 50px 30px;
+            border: 1px solid #222;
+            position: relative;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .s-card:hover {
+            border-color: var(--primary-red);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 20px var(--accent-glow);
+        }
+
+        .s-card h3 { 
+            color: #fff; 
+            margin-bottom: 15px; 
+            font-size: 1.2rem; 
+            letter-spacing: 2px;
+            border-bottom: 2px solid var(--primary-red);
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        .s-card p {
+            color: #aaa;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-top: 10px;
+        }
+
+        /* 5. CONTATTACI */
+        .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            width: 100%;
+            max-width: 1200px;
+            background: #0a0a0a;
+            border: 1px solid #222;
+            min-height: 550px;
+        }
+
+        .info-panel {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .info-panel h2 {
+            color: #fff;
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            letter-spacing: 2px;
+        }
+
+        .info-item {
+            margin-bottom: 20px;
+        }
+
+        .info-item strong { 
+            color: var(--primary-red); 
+            display: block; 
+            font-size: 0.75rem; 
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+
+        .orari-grid {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 5px 15px;
+            font-size: 0.85rem;
+            color: #ccc;
+            line-height: 1.5;
+        }
+
+        .orari-grid span:nth-child(odd) {
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .map-box {
+            width: 100%;
+            height: 100%;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        @media (max-width: 768px) {
+            nav { display: none; }
+            .services-container, .contact-container, .brochure-view { grid-template-columns: 1fr; flex-direction: column; }
+            section { height: auto; min-height: 100vh; padding: 100px 20px; }
+            .map-box { min-height: 350px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <ul>
+            <li><a href="#home">HOME</a></li>
+            <li><a href="#chi-siamo">CHI SIAMO</a></li>
+            <li><a href="#brochure">BROCHURE</a></li>
+            <li><a href="#servizi">I NOSTRI SERVIZI</a></li>
+            <li><a href="#contatti">CONTATTACI</a></li>
+        </ul>
+    </nav>
+
+    <section id="home">
+        <div class="hero-frame">
+            <img src="INPUT.png" alt="INPUT LOGO" class="hero-logo">
+        </div>
+    </section>
+
+    <section id="chi-siamo">
+        <div class="video-box">
+            <video controls autoplay muted loop playsinline>
+                <source src="VIDEO UFFICIALE.mp4" type="video/mp4">
+            </video>
+        </div>
+    </section>
+
+    <section id="brochure">
+        <div class="brochure-view">
+            <img src="BROCHURE 1.jpg" alt="Brochure Pagina 1">
+            <img src="BROCHURE 2.jpg" alt="Brochure Pagina 2">
+        </div>
+    </section>
+
+    <section id="servizi">
+        <h2 class="giant-title">I NOSTRI <span>SERVIZI</span></h2>
+        <div class="services-container">
+            <div class="s-card">
+                <h3>WEB DEV</h3>
+                <p>Architetture scalabili e interfacce reattive. Utilizziamo i framework più avanzati per garantire velocità e sicurezza.</p>
+            </div>
+            <div class="s-card">
+                <h3>CLOUD SYSTEMS</h3>
+                <p>Migrazione e gestione di infrastrutture cloud. Ottimizziamo i costi e garantiamo un uptime costante per il tuo business.</p>
+            </div>
+            <div class="s-card">
+                <h3>UI/UX DESIGN</h3>
+                <p>Progettazione orientata all'utente. Creiamo percorsi intuitivi che trasformano i visitatori in clienti fidelizzati.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="contatti">
+        <div class="contact-container">
+            <div class="info-panel">
+                <h2>CONTATTACI</h2>
+                <div class="info-item">
+                    <strong>SEDE OPERATIVA</strong>
+                    Corso Roma 26, Foggia (FG), Italia
+                </div>
+                <div class="info-item">
+                    <strong>CONTATTI RAPIDI</strong>
+                    inputwebsrl@gmail.com<br>
+                    inputwebsrl.github.io
+                </div>
+                <div class="info-item">
+                    <strong>I NOSTRI ORARI</strong>
+                    <div class="orari-grid">
+                        <span>LUNED&igrave;:</span> <span>09:00 - 18:00</span>
+                        <span>MARTED&igrave;:</span> <span>09:00 - 18:00</span>
+                        <span>MERCOLED&igrave;:</span> <span>09:00 - 18:00</span>
+                        <span>GIOVED&igrave;:</span> <span>09:00 - 18:00</span>
+                        <span>VENERD&igrave;:</span> <span>09:00 - 18:00</span>
+                        <span>SABATO:</span> <span>CHIUSO</span>
+                        <span>DOMENICA:</span> <span>CHIUSO</span>
+                    </div>
+                </div>
+            </div>
+            <div class="map-box">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3004.8105658194474!2d15.548483776566087!3d41.460838191839524!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x133939634e9e7b39%3A0x6e7e17134444558e!2sCorso%20Roma%2C%2026%2C%2071121%20Foggia%20FG!5e0!3m2!1sit!2sit!4v1700000000000!5m2!1sit!2sit" 
+                    allowfullscreen="" 
+                    loading="lazy">
+                </iframe>
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>
