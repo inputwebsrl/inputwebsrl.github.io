@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INPUT | High-End Web Development</title>
+    <style>
+        :root {
+            --primary-red: #FF0000;
+            --dark-bg: #050505;
+            --tech-gray: #111;
+            --accent-glow: rgba(255, 0, 0, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-snap-type: y mandatory;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* --- EFFETTI TECH --- */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: var(--primary-red);
+            box-shadow: 0 0 15px var(--primary-red);
+            z-index: 2000;
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 70px;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            border-bottom: 1px solid #222;
+            backdrop-filter: blur(10px);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
+
+        nav a:hover { color: var(--primary-red); }
+
+        /* --- SECTIONS LAYOUT --- */
+        section {
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            scroll-snap-align: start;
+            position: relative;
+            padding: 80px 5%;
+        }
+
+        /* 1. HOME */
+        .hero-frame {
+            border: 1px solid #222;
+            padding: 60px;
+            background: #000;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(0,0,0,1);
+        }
+        .hero-logo { width: 100%; max-width: 700px; height: auto; }
+
+        /* 2. CHI SIAMO */
+        .video-box { width: 100%; max-width: 1000px; border: 1px solid #333; background: #000; }
+        video { width: 100%; display: block; }
+
+        /* 3. BROCHURE SLIDER */
+        .slider-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            height: 80vh;
+            overflow: hidden;
+            border: 1px solid #222;
+        }
+
+        .brochure-container {
+            display: flex;
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            height: 100%;
+        }
+
+        .brochure-slide { min-width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
+        .brochure-slide img { max-width: 100%; max-height: 100%; object-fit: contain; }
+
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.8);
+            color: white;
+            border: 1px solid var(--primary-red);
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            z-index: 10;
+            transition: 0.3s;
+        }
+        .slider-btn:hover { background: var(--primary-red); box-shadow: 0 0 15px var(--primary-red); }
+        .prev { left: 10px; }
+        .next { right: 10px; }
+
+        /* 4. SERVIZI REVEAL EFFECT */
+        .s-card {
+            background: rgba(20, 20, 20, 0.6);
+            padding: 50px 30px;
+            border: 1px solid #222;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s ease-out;
+        }
+
+        .s-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .giant-title { font-size: clamp(2.5rem, 8vw, 5rem); font-weight: 900; text-transform: uppercase; margin-bottom: 60px; text-align: center; }
+        .giant-title span { color: var(--primary-red); text-shadow: 0 0 15px var(--primary-red); }
+
+        .services-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        /* 5. CONTATTACI */
+        .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            width: 100%;
+            max-width: 1200px;
+            background: #0a0a0a;
+            border: 1px solid #222;
+        }
+
+        .info-panel { padding: 40px; }
+        .info-item { margin-bottom: 20px; }
+        .info-item strong { color: var(--primary-red); display: block; font-size: 0.75rem; letter-spacing: 2px; margin-bottom: 8px; }
+
+        .orari-grid {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 5px 15px;
+            font-size: 0.85rem;
+            color: #ccc;
+        }
+
+        @media (max-width: 768px) {
+            nav { display: none; }
+            .services-container, .contact-container { grid-template-columns: 1fr; }
+            section { height: auto; min-height: 100vh; padding: 100px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="scroll-progress" id="progressBar"></div>
+
+    <nav>
+        <ul>
+            <li><a href="#home">HOME</a></li>
+            <li><a href="#chi-siamo">CHI SIAMO</a></li>
+            <li><a href="#brochure">BROCHURE</a></li>
+            <li><a href="#servizi">SERVIZI</a></li>
+            <li><a href="#contatti">CONTATTACI</a></li>
+        </ul>
+    </nav>
+
+    <section id="home">
+        <div class="hero-frame">
+            <img src="INPUT.png" alt="INPUT LOGO" class="hero-logo">
+        </div>
+    </section>
+
+    <section id="chi-siamo">
+        <div class="video-box">
+            <video controls autoplay muted loop playsinline>
+                <source src="VIDEO UFFICIALE.mp4" type="video/mp4">
+            </video>
+        </div>
+    </section>
+
+    <section id="brochure">
+        <div class="slider-wrapper">
+            <button class="slider-btn prev" onclick="moveSlide(-1)">&#10094;</button>
+            <div class="brochure-container" id="slider">
+                <div class="brochure-slide"><img src="BROCHURE 1.jpg" alt="Pagina 1"></div>
+                <div class="brochure-slide"><img src="BROCHURE 2.jpg" alt="Pagina 2"></div>
+            </div>
+            <button class="slider-btn next" onclick="moveSlide(1)">&#10095;</button>
+        </div>
+    </section>
+
+    <section id="servizi">
+        <h2 class="giant-title">I NOSTRI <span>SERVIZI</span></h2>
+        <div class="services-container">
+            <div class="s-card">
+                <h3>WEB DEV</h3>
+                <p>Architetture scalabili e interfacce reattive ad alte prestazioni.</p>
+            </div>
+            <div class="s-card">
+                <h3>CLOUD SYSTEMS</h3>
+                <p>Migrazione e gestione di infrastrutture cloud sicure.</p>
+            </div>
+            <div class="s-card">
+                <h3>UI/UX DESIGN</h3>
+                <p>Esperienze utente progettate per la massima conversione.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="contatti">
+        <div class="contact-container">
+            <div class="info-panel">
+                <div class="info-item">
+                    <strong>SEDE OPERATIVA</strong>
+                    Corso Roma 26, Foggia (FG), Italia
+                </div>
+                <div class="info-item">
+                    <strong>I NOSTRI ORARI</strong>
+                    <div class="orari-grid">
+                        <span>LUNED&Igrave;:</span> <span>09:00 - 18:00</span>
+                        <span>MARTED&Igrave;:</span> <span>09:00 - 18:00</span>
+                        <span>MERCOLED&Igrave;:</span> <span>09:00 - 18:00</span>
+                        <span>GIOVED&Igrave;:</span> <span>09:00 - 18:00</span>
+                        <span>VENERD&Igrave;:</span> <span>09:00 - 18:00</span>
+                        <span>SABATO:</span> <span>CHIUSO</span>
+                        <span>DOMENICA:</span> <span>CHIUSO</span>
+                    </div>
+                </div>
+            </div>
+            <div class="map-box">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3004.6543!2d15.552!3d41.46!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDHCsDI3JzM2LjAiTiAxNcKwMzMnMDcuMiJF!5e0!3m2!1sit!2sit!4v1620000000000" style="width:100%; height:100%; border:0;" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // 1. Gestione Slider Brochure
+        let currentSlide = 0;
+        const slider = document.getElementById('slider');
+        const totalSlides = 2;
+
+        function moveSlide(direction) {
+            currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
+            slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+        }
+
+        // 2. Barra di Progresso allo Scroll
+        window.onscroll = function() {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progressBar").style.width = scrolled + "%";
+        };
+
+        // 3. Reveal Animation per le Card Servizi
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.2 });
+
+        document.querySelectorAll('.s-card').forEach(card => observer.observe(card));
+    </script>
+</body>
+</html>
