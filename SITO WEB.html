@@ -98,21 +98,65 @@
         }
         video { width: 100%; display: block; }
 
-        /* 3. BROCHURE */
-        .brochure-view {
-            display: flex;
+        /* 3. BROCHURE SLIDER (MODIFICATO) */
+        .slider-wrapper {
+            position: relative;
             width: 100%;
-            height: 80%;
-            gap: 20px;
-            justify-content: center;
+            max-width: 800px; /* Larghezza di una singola pagina */
+            height: 80vh;
+            overflow: hidden;
+            border: 1px solid #222;
+            display: flex;
+            align-items: center;
         }
-        .brochure-view img {
-            width: 45%;
-            height: auto;
+
+        .brochure-container {
+            display: flex;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 100%;
+            height: 100%;
+        }
+
+        .brochure-slide {
+            min-width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+        }
+
+        .brochure-slide img {
+            max-width: 100%;
             max-height: 100%;
             object-fit: contain;
-            border: 1px solid #222;
         }
+
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.7);
+            color: white;
+            border: 1px solid var(--primary-red);
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            z-index: 10;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+        }
+
+        .slider-btn:hover {
+            background: var(--primary-red);
+            box-shadow: 0 0 15px var(--primary-red);
+        }
+
+        .prev { left: 20px; }
+        .next { right: 20px; }
 
         /* 4. I NOSTRI SERVIZI */
         #servizi {
@@ -239,9 +283,10 @@
 
         @media (max-width: 768px) {
             nav { display: none; }
-            .services-container, .contact-container, .brochure-view { grid-template-columns: 1fr; flex-direction: column; }
+            .services-container, .contact-container { grid-template-columns: 1fr; }
             section { height: auto; min-height: 100vh; padding: 100px 20px; }
             .map-box { min-height: 350px; }
+            .slider-wrapper { height: 60vh; }
         }
     </style>
 </head>
@@ -272,9 +317,17 @@
     </section>
 
     <section id="brochure">
-        <div class="brochure-view">
-            <img src="BROCHURE 1.jpg" alt="Brochure Pagina 1">
-            <img src="BROCHURE 2.jpg" alt="Brochure Pagina 2">
+        <div class="slider-wrapper">
+            <button class="slider-btn prev" onclick="moveSlide(-1)">&#10094;</button>
+            <div class="brochure-container" id="slider">
+                <div class="brochure-slide">
+                    <img src="BROCHURE 1.jpg" alt="Brochure Pagina 1">
+                </div>
+                <div class="brochure-slide">
+                    <img src="BROCHURE 2.jpg" alt="Brochure Pagina 2">
+                </div>
+            </div>
+            <button class="slider-btn next" onclick="moveSlide(1)">&#10095;</button>
         </div>
     </section>
 
@@ -312,11 +365,11 @@
                 <div class="info-item">
                     <strong>I NOSTRI ORARI</strong>
                     <div class="orari-grid">
-                        <span>LUNED&igrave;:</span> <span>09:00 - 18:00</span>
-                        <span>MARTED&igrave;:</span> <span>09:00 - 18:00</span>
-                        <span>MERCOLED&igrave;:</span> <span>09:00 - 18:00</span>
-                        <span>GIOVED&igrave;:</span> <span>09:00 - 18:00</span>
-                        <span>VENERD&igrave;:</span> <span>09:00 - 18:00</span>
+                        <span>LUNEDì:</span> <span>09:00 - 18:00</span>
+                        <span>MARTEDì:</span> <span>09:00 - 18:00</span>
+                        <span>MERCOLEDì:</span> <span>09:00 - 18:00</span>
+                        <span>GIOVEDì:</span> <span>09:00 - 18:00</span>
+                        <span>VENERDì:</span> <span>09:00 - 18:00</span>
                         <span>SABATO:</span> <span>CHIUSO</span>
                         <span>DOMENICA:</span> <span>CHIUSO</span>
                     </div>
@@ -324,13 +377,34 @@
             </div>
             <div class="map-box">
                 <iframe 
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3004.8105658194474!2d15.548483776566087!3d41.460838191839524!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x133939634e9e7b39%3A0x6e7e17134444558e!2sCorso%20Roma%2C%2026%2C%2071121%20Foggia%20FG!5e0!3m2!1sit!2sit!4v1700000000000!5m2!1sit!2sit" 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2994.4828131597816!2d15.549216!3d41.4613261!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x13374567e915993d%3A0x673413982f6e9f55!2sCorso%20Roma%2C%2026%2C%2071121%20Foggia%20FG!5e0!3m2!1sit!2sit!4v1700000000000" 
                     allowfullscreen="" 
                     loading="lazy">
                 </iframe>
             </div>
         </div>
     </section>
+
+    <script>
+        let currentSlide = 0;
+        const slider = document.getElementById('slider');
+        const totalSlides = document.querySelectorAll('.brochure-slide').length;
+
+        function moveSlide(direction) {
+            currentSlide += direction;
+
+            // Loop infinito
+            if (currentSlide >= totalSlides) {
+                currentSlide = 0;
+            }
+            if (currentSlide < 0) {
+                currentSlide = totalSlides - 1;
+            }
+
+            const offset = currentSlide * -100;
+            slider.style.transform = `translateX(${offset}%)`;
+        }
+    </script>
 
 </body>
 </html>
